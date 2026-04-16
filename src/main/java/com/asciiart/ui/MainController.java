@@ -10,6 +10,6 @@ public class MainController {
 
     @FXML
     private void handleTest() {
-        outputArea.setText("JavaFX is working 🚀");
+        outputArea.setText("JavaFX is working");
     }
 }
