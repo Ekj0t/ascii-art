@@ -13,7 +13,13 @@ public class MainApp extends Application {
                 getClass().getResource("/main.fxml")
         );
 
+
+
         Scene scene = new Scene(loader.load(), 800, 600);
+
+        scene.getStylesheets().add(
+                getClass().getResource("/style.css").toExternalForm()
+        );
 
         stage.setTitle("ASCII Art Generator");
         stage.setScene(scene);

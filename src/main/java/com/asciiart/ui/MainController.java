@@ -90,8 +90,26 @@ public class MainController {
         triggerUpdate(); // refresh preview
     }
 
+    @FXML
+    private void resetResolution() {
+        resolutionSlider.setValue(150);
+        triggerUpdate();
+    }
+
+    @FXML
+    private void resetContrast() {
+        contrastSlider.setValue(0.8);
+        triggerUpdate();
+    }
+
+    @FXML
+    private void resetBrightness() {
+        brightnessSlider.setValue(0);
+        triggerUpdate();
+    }
+
     // =========================
-    // 📂 Upload
+    // Upload
     // =========================
     @FXML
     private void handleUpload() {
@@ -122,7 +140,7 @@ public class MainController {
     }
 
     // =========================
-    // 🖱️ Drag & Drop
+    // Drag & Drop
     // =========================
     private void setupDragAndDrop() {
 
@@ -144,7 +162,7 @@ public class MainController {
     }
 
     // =========================
-    // 🎛️ Live Preview Setup
+    // Live Preview Setup
     // =========================
     private void setupLivePreview() {
 
@@ -160,7 +178,7 @@ public class MainController {
     }
 
     // =========================
-    // 🔄 ASCII + Image Update
+    // ASCII + Image Update
     // =========================
     private void updateAscii() {
         if (currentImage == null) return;
@@ -184,7 +202,7 @@ public class MainController {
     }
 
     // =========================
-    // 🖼️ Image Preview (processed)
+    // Image Preview (processed)
     // =========================
     private void updatePreviewImage() {
         if (currentImage == null) return;
@@ -263,7 +281,7 @@ public class MainController {
     }
 
     // =========================
-    // 💾 Save ASCII as Image
+    // Save ASCII as Image
     // =========================
     @FXML
     private void handleSave() {
@@ -296,7 +314,7 @@ public class MainController {
     }
 
     // =========================
-    // 🔤 ASCII → Image Renderer
+    // ASCII → Image Renderer
     // =========================
     private BufferedImage asciiToImage(String ascii) {
 

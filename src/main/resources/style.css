@@ -1,0 +1,100 @@
+/* ================= ROOT ================= */
+.root {
+    -fx-background-color: #1e1e1e;
+    -fx-font-family: "Segoe UI", "Consolas";
+}
+
+/* ================= PANELS ================= */
+.top-bar {
+    -fx-background-color: #2b2b2b;
+    -fx-padding: 10;
+}
+
+.side-panel {
+    -fx-background-color: #252526;
+    -fx-padding: 18;
+    -fx-spacing: 14;
+}
+
+/* ================= TEXT ================= */
+.label {
+    -fx-text-fill: #c5c5c5;
+    -fx-font-size: 13px;
+}
+
+.section-title {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* ================= BUTTON ================= */
+.button {
+    -fx-background-color: #3a3d41;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 14;
+}
+
+.button:hover {
+    -fx-background-color: #4f5358;
+}
+
+.button:pressed {
+    -fx-background-color: #2f3136;
+}
+
+/* small reset button */
+.reset-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #888;
+}
+
+.reset-btn:hover {
+    -fx-text-fill: #ffffff;
+}
+
+/* ================= SLIDER ================= */
+.slider .track {
+    -fx-background-color: #3a3d41;
+    -fx-background-radius: 5;
+}
+
+.slider .thumb {
+    -fx-background-color: #007acc;
+    -fx-background-radius: 50%;
+}
+
+/* ================= TEXT INPUT ================= */
+.text-field {
+    -fx-background-color: #2b2b2b;
+    -fx-text-fill: white;
+    -fx-border-color: #3a3d41;
+    -fx-border-radius: 4;
+}
+
+/* ================= TEXT AREA ================= */
+.text-area {
+    -fx-control-inner-background: #1e1e1e;
+    -fx-text-fill: #d4d4d4;
+    -fx-font-family: "Consolas";
+    -fx-highlight-fill: #264f78;
+}
+
+/* ================= CHECKBOX ================= */
+.check-box {
+    -fx-text-fill: #c5c5c5;
+}
+
+/* ================= PREVIEW ================= */
+.preview-box {
+    -fx-background-color: #1e1e1e;
+    -fx-border-color: #3a3d41;
+    -fx-border-radius: 6;
+    -fx-padding: 10;
+}
+
+/* ================= SEPARATOR ================= */
+.separator .line {
+    -fx-border-color: #3a3d41;
+}

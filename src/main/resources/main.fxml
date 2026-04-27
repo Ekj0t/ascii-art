@@ -5,76 +5,66 @@
 <?import javafx.scene.image.ImageView?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.asciiart.ui.MainController"
-            style="-fx-background-color: #1e1e1e;">
+            fx:controller="com.asciiart.ui.MainController">
 
-    <!-- TOP BAR -->
+    <!-- ================= TOP BAR ================= -->
     <top>
-        <HBox spacing="10" style="-fx-padding: 10; -fx-background-color: #2b2b2b;">
+        <HBox spacing="10" styleClass="top-bar">
             <Button text="Upload" onAction="#handleUpload"/>
             <Button text="Save" onAction="#handleSave"/>
         </HBox>
     </top>
 
-    <!-- LEFT PANEL -->
+    <!-- ================= LEFT PANEL ================= -->
     <left>
-        <VBox spacing="15" style="-fx-padding: 15; -fx-background-color: #252526;">
+        <VBox styleClass="side-panel">
 
-            <!-- RESOLUTION -->
-            <Label text="Resolution" style="-fx-text-fill: #cccccc;"/>
-            <HBox spacing="10">
+            <!-- Resolution -->
+            <Label text="Resolution" styleClass="section-title"/>
+            <HBox spacing="8">
                 <Slider fx:id="resolutionSlider" min="50" max="300" value="150" HBox.hgrow="ALWAYS"/>
-                <TextField fx:id="resolutionField" prefWidth="60"/>
+                <TextField fx:id="resolutionField" prefWidth="55"/>
+                <Button text="↺" styleClass="reset-btn" onAction="#resetResolution"/>
             </HBox>
 
-            <!-- CONTRAST -->
-            <Label text="Contrast" style="-fx-text-fill: #cccccc;"/>
-            <HBox spacing="10">
+            <!-- Contrast -->
+            <Label text="Contrast" styleClass="section-title"/>
+            <HBox spacing="8">
                 <Slider fx:id="contrastSlider" min="0.5" max="2.0" value="0.8" HBox.hgrow="ALWAYS"/>
-                <TextField fx:id="contrastField" prefWidth="60"/>
+                <TextField fx:id="contrastField" prefWidth="55"/>
+                <Button text="↺" styleClass="reset-btn" onAction="#resetContrast"/>
             </HBox>
 
-            <!-- BRIGHTNESS -->
-            <Label text="Brightness" style="-fx-text-fill: #cccccc;"/>
-            <HBox spacing="10">
+            <!-- Brightness -->
+            <Label text="Brightness" styleClass="section-title"/>
+            <HBox spacing="8">
                 <Slider fx:id="brightnessSlider" min="-0.5" max="0.5" value="0" HBox.hgrow="ALWAYS"/>
-                <TextField fx:id="brightnessField" prefWidth="60"/>
+                <TextField fx:id="brightnessField" prefWidth="55"/>
+                <Button text="↺" styleClass="reset-btn" onAction="#resetBrightness"/>
             </HBox>
 
-            <!-- INVERT -->
-            <CheckBox fx:id="invertCheckbox" text="Invert" style="-fx-text-fill: #cccccc;"/>
-
-            <Separator/>
-
-            <!-- ACTIONS -->
-            <Button text="Upload" onAction="#handleUpload"/>
-            <Button text="Save" onAction="#handleSave"/>
-            <Button text="Reset" onAction="#handleReset"/>
+            <!-- Toggle -->
+            <CheckBox fx:id="invertCheckbox" text="Invert"/>
 
         </VBox>
     </left>
 
-    <!-- CENTER (ASCII OUTPUT) -->
+    <!-- ================= CENTER ================= -->
     <center>
-        <TextArea fx:id="outputArea"
-                  wrapText="false"
-                  style="
-                        -fx-font-family: 'Consolas';
-                        -fx-font-size: 8;
-                        -fx-control-inner-background: #1e1e1e;
-                        -fx-text-fill: #d4d4d4;
-                  "/>
+        <TextArea fx:id="outputArea" wrapText="false"/>
     </center>
 
-    <!-- RIGHT (IMAGE PREVIEW) -->
+    <!-- ================= RIGHT PANEL ================= -->
     <right>
-        <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #252526;">
+        <VBox styleClass="side-panel">
 
-            <Label text="Preview" style="-fx-text-fill: #cccccc;"/>
+            <Label text="Preview" styleClass="section-title"/>
 
-            <ImageView fx:id="previewImageView"
-                       fitWidth="300"
-                       preserveRatio="true"/>
+            <StackPane styleClass="preview-box">
+                <ImageView fx:id="previewImageView"
+                           fitWidth="280"
+                           preserveRatio="true"/>
+            </StackPane>
 
         </VBox>
     </right>

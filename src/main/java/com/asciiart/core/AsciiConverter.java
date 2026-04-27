@@ -19,7 +19,6 @@ public class AsciiConverter {
 
         double aspectRatio = (double) originalHeight / originalWidth;
 
-        // 🔥 Accurate character aspect ratio (no guessing)
         double charAspect = FontUtils.getCharAspectRatio();
 
         int height = (int) (width * aspectRatio * (1.0 / charAspect));
@@ -52,18 +51,18 @@ public class AsciiConverter {
 
         double normalized = gray / 255.0;
 
-        // 🎯 Contrast control
+        // Contrast control
         normalized = Math.pow(normalized, contrast);
 
-        // 🎯 Brightness adjustment
+        // Brightness adjustment
         normalized += brightness;
 
-        // 🎯 Invert toggle
+        // Invert toggle
         if (invert) {
             normalized = 1.0 - normalized;
         }
 
-        // 🎯 Clamp values (VERY important)
+        // Clamp values (VERY important)
         normalized = Math.max(0, Math.min(1, normalized));
 
         int index = (int) (normalized * (CharacterMap.DEFAULT.length() - 1));
