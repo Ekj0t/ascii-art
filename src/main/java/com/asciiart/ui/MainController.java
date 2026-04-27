@@ -1,14 +1,18 @@
 package com.asciiart.ui;
 
-import javafx.animation.PauseTransition;
-import javafx.util.Duration;
-import javafx.scene.control.Slider;
-import javafx.scene.control.CheckBox;
 import com.asciiart.core.AsciiConverter;
+import javafx.animation.PauseTransition;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.TransferMode;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import javafx.scene.control.TextField;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -17,27 +21,131 @@ import java.io.File;
 
 public class MainController {
 
-    @FXML
-    private TextArea outputArea;
-
-    private final AsciiConverter converter = new AsciiConverter();
-
+    @FXML private TextArea outputArea;
     @FXML private Slider resolutionSlider;
     @FXML private Slider contrastSlider;
     @FXML private Slider brightnessSlider;
     @FXML private CheckBox invertCheckbox;
+    @FXML private ImageView previewImageView;
 
-    private PauseTransition delay = new PauseTransition(Duration.millis(200));
+    @FXML private TextField resolutionField;
+    @FXML private TextField contrastField;
+    @FXML private TextField brightnessField;
+
+    private final AsciiConverter converter = new AsciiConverter();
 
     private File currentFile;
     private BufferedImage currentImage;
+
+    private final PauseTransition delay = new PauseTransition(Duration.millis(200));
 
     @FXML
     private void initialize() {
         setupDragAndDrop();
         setupLivePreview();
+        bindSliderWithField();
     }
 
+    private void bindSliderWithField() {
+
+        bind(resolutionSlider, resolutionField, 0);
+        bind(contrastSlider, contrastField, 2);
+        bind(brightnessSlider, brightnessField, 2);
+    }
+
+    private void bind(Slider slider, TextField field, int decimals) {
+
+        // Slider → Text
+        slider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            field.setText(String.format("%." + decimals + "f", newVal.doubleValue()));
+        });
+
+        // Initial value
+        field.setText(String.format("%." + decimals + "f", slider.getValue()));
+
+        // Text → Slider
+        field.setOnAction(e -> updateSliderFromField(slider, field));
+        field.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) updateSliderFromField(slider, field);
+        });
+    }
+
+    private void updateSliderFromField(Slider slider, TextField field) {
+        try {
+            double value = Double.parseDouble(field.getText());
+            slider.setValue(value);
+        } catch (Exception ignored) {
+            field.setText(String.valueOf(slider.getValue()));
+        }
+    }
+
+    @FXML
+    private void handleReset() {
+
+        resolutionSlider.setValue(150);
+        contrastSlider.setValue(0.8);
+        brightnessSlider.setValue(0);
+        invertCheckbox.setSelected(false);
+
+        triggerUpdate(); // refresh preview
+    }
+
+    // =========================
+    // 📂 Upload
+    // =========================
+    @FXML
+    private void handleUpload() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Image");
+
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg")
+        );
+
+        File file = fileChooser.showOpenDialog(new Stage());
+
+        if (file != null) {
+            processImage(file);
+        }
+    }
+
+    private void processImage(File file) {
+        try {
+            currentFile = file;
+            currentImage = ImageIO.read(file);
+
+            updateAscii();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // =========================
+    // 🖱️ Drag & Drop
+    // =========================
+    private void setupDragAndDrop() {
+
+        outputArea.setOnDragOver(event -> {
+            if (event.getDragboard().hasFiles()) {
+                event.acceptTransferModes(TransferMode.COPY);
+            }
+            event.consume();
+        });
+
+        outputArea.setOnDragDropped(event -> {
+            var files = event.getDragboard().getFiles();
+            if (!files.isEmpty()) {
+                processImage(files.get(0));
+            }
+            event.setDropCompleted(true);
+            event.consume();
+        });
+    }
+
+    // =========================
+    // 🎛️ Live Preview Setup
+    // =========================
     private void setupLivePreview() {
 
         resolutionSlider.valueProperty().addListener((obs, o, n) -> triggerUpdate());
@@ -51,6 +159,9 @@ public class MainController {
         delay.playFromStart();
     }
 
+    // =========================
+    // 🔄 ASCII + Image Update
+    // =========================
     private void updateAscii() {
         if (currentImage == null) return;
 
@@ -68,54 +179,92 @@ public class MainController {
         );
 
         outputArea.setText(ascii);
+
+        updatePreviewImage();
     }
 
-    @FXML
-    private void handleUpload() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Image");
+    // =========================
+    // 🖼️ Image Preview (processed)
+    // =========================
+    private void updatePreviewImage() {
+        if (currentImage == null) return;
 
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg")
+        double contrast = contrastSlider.getValue();
+        double brightness = brightnessSlider.getValue();
+        boolean invert = invertCheckbox.isSelected();
+
+        BufferedImage processed = processImagePreview(
+                currentImage,
+                contrast,
+                brightness,
+                invert
         );
 
-        File file = fileChooser.showOpenDialog(new Stage());
-
-        if (file != null) {
-            processImage(file);
-        }
+        previewImageView.setImage(SwingFXUtils.toFXImage(processed, null));
     }
 
-    private void setupDragAndDrop() {
-        outputArea.setOnDragOver(event -> {
-            if (event.getDragboard().hasFiles()) {
-                event.acceptTransferModes(javafx.scene.input.TransferMode.COPY);
+    private BufferedImage processImagePreview(
+            BufferedImage original,
+            double contrast,
+            double brightness,
+            boolean invert
+    ) {
+
+        int width = original.getWidth();
+        int height = original.getHeight();
+
+        BufferedImage output = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+
+                int rgb = original.getRGB(x, y);
+
+                int r = (rgb >> 16) & 0xff;
+                int g = (rgb >> 8) & 0xff;
+                int b = rgb & 0xff;
+
+                double rn = r / 255.0;
+                double gn = g / 255.0;
+                double bn = b / 255.0;
+
+                // Contrast
+                rn = Math.pow(rn, contrast);
+                gn = Math.pow(gn, contrast);
+                bn = Math.pow(bn, contrast);
+
+                // Brightness
+                rn += brightness;
+                gn += brightness;
+                bn += brightness;
+
+                // Invert
+                if (invert) {
+                    rn = 1 - rn;
+                    gn = 1 - gn;
+                    bn = 1 - bn;
+                }
+
+                // Clamp
+                rn = Math.max(0, Math.min(1, rn));
+                gn = Math.max(0, Math.min(1, gn));
+                bn = Math.max(0, Math.min(1, bn));
+
+                int newR = (int) (rn * 255);
+                int newG = (int) (gn * 255);
+                int newB = (int) (bn * 255);
+
+                int newRGB = (newR << 16) | (newG << 8) | newB;
+                output.setRGB(x, y, newRGB);
             }
-            event.consume();
-        });
-
-        outputArea.setOnDragDropped(event -> {
-            var files = event.getDragboard().getFiles();
-            if (!files.isEmpty()) {
-                processImage(files.get(0));
-            }
-            event.setDropCompleted(true);
-            event.consume();
-        });
-    }
-
-    private void processImage(File file) {
-        try {
-            currentFile = file;
-            currentImage = ImageIO.read(file);
-
-            updateAscii();
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
+        return output;
     }
 
+    // =========================
+    // 💾 Save ASCII as Image
+    // =========================
     @FXML
     private void handleSave() {
         try {
@@ -146,7 +295,9 @@ public class MainController {
         }
     }
 
-    // 🔥 FIXED rendering (FontMetrics based)
+    // =========================
+    // 🔤 ASCII → Image Renderer
+    // =========================
     private BufferedImage asciiToImage(String ascii) {
 
         String[] lines = ascii.split("\n");
@@ -184,6 +335,7 @@ public class MainController {
         }
 
         g.dispose();
+
         return img;
     }
 }

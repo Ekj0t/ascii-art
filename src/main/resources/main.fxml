@@ -1,41 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.asciiart.ui.MainController">
+            fx:controller="com.asciiart.ui.MainController"
+            style="-fx-background-color: #1e1e1e;">
 
-    <!-- LEFT PANEL (CONTROLS) -->
+    <!-- TOP BAR -->
+    <top>
+        <HBox spacing="10" style="-fx-padding: 10; -fx-background-color: #2b2b2b;">
+            <Button text="Upload" onAction="#handleUpload"/>
+            <Button text="Save" onAction="#handleSave"/>
+        </HBox>
+    </top>
+
+    <!-- LEFT PANEL -->
     <left>
-        <VBox spacing="12" style="-fx-padding: 12; -fx-background-color: #2b2b2b;">
+        <VBox spacing="15" style="-fx-padding: 15; -fx-background-color: #252526;">
 
-            <Label text="Resolution" style="-fx-text-fill: white;"/>
-            <Slider fx:id="resolutionSlider" min="50" max="300" value="150"/>
+            <!-- RESOLUTION -->
+            <Label text="Resolution" style="-fx-text-fill: #cccccc;"/>
+            <HBox spacing="10">
+                <Slider fx:id="resolutionSlider" min="50" max="300" value="150" HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="resolutionField" prefWidth="60"/>
+            </HBox>
 
-            <Label text="Contrast" style="-fx-text-fill: white;"/>
-            <Slider fx:id="contrastSlider" min="0.5" max="2.0" value="0.8"/>
+            <!-- CONTRAST -->
+            <Label text="Contrast" style="-fx-text-fill: #cccccc;"/>
+            <HBox spacing="10">
+                <Slider fx:id="contrastSlider" min="0.5" max="2.0" value="0.8" HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="contrastField" prefWidth="60"/>
+            </HBox>
 
-            <Label text="Brightness" style="-fx-text-fill: white;"/>
-            <Slider fx:id="brightnessSlider" min="-0.5" max="0.5" value="0"/>
+            <!-- BRIGHTNESS -->
+            <Label text="Brightness" style="-fx-text-fill: #cccccc;"/>
+            <HBox spacing="10">
+                <Slider fx:id="brightnessSlider" min="-0.5" max="0.5" value="0" HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="brightnessField" prefWidth="60"/>
+            </HBox>
 
-
-            <CheckBox fx:id="invertCheckbox" text="Invert" style="-fx-text-fill: white;"/>
+            <!-- INVERT -->
+            <CheckBox fx:id="invertCheckbox" text="Invert" style="-fx-text-fill: #cccccc;"/>
 
             <Separator/>
 
-            <Button text="Upload Image" onAction="#handleUpload"/>
-            <Button text="Save ASCII Image" onAction="#handleSave"/>
+            <!-- ACTIONS -->
+            <Button text="Upload" onAction="#handleUpload"/>
+            <Button text="Save" onAction="#handleSave"/>
+            <Button text="Reset" onAction="#handleReset"/>
 
         </VBox>
     </left>
 
-    <!-- CENTER (ASCII PREVIEW) -->
+    <!-- CENTER (ASCII OUTPUT) -->
     <center>
         <TextArea fx:id="outputArea"
                   wrapText="false"
-                  style="-fx-font-family: 'Consolas'; -fx-font-size: 8;"/>
+                  style="
+                        -fx-font-family: 'Consolas';
+                        -fx-font-size: 8;
+                        -fx-control-inner-background: #1e1e1e;
+                        -fx-text-fill: #d4d4d4;
+                  "/>
     </center>
+
+    <!-- RIGHT (IMAGE PREVIEW) -->
+    <right>
+        <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #252526;">
+
+            <Label text="Preview" style="-fx-text-fill: #cccccc;"/>
+
+            <ImageView fx:id="previewImageView"
+                       fitWidth="300"
+                       preserveRatio="true"/>
+
+        </VBox>
+    </right>
 
 </BorderPane>

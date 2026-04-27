@@ -17,6 +17,7 @@ public class MainApp extends Application {
 
         stage.setTitle("ASCII Art Generator");
         stage.setScene(scene);
+        stage.setMaximized(true);
         stage.show();
     }
 
