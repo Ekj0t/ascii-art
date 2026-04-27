@@ -6,14 +6,20 @@ import java.awt.image.BufferedImage;
 
 public class AsciiConverter {
 
-    public String convertToAscii(BufferedImage image, int width) {
+    public String convertToAscii(
+            BufferedImage image,
+            int width,
+            double contrast,
+            double brightness,
+            boolean invert
+    ) {
 
         int originalWidth = image.getWidth();
         int originalHeight = image.getHeight();
 
         double aspectRatio = (double) originalHeight / originalWidth;
 
-        // 🔥 REAL fix (no guess)
+        // 🔥 Accurate character aspect ratio (no guessing)
         double charAspect = FontUtils.getCharAspectRatio();
 
         int height = (int) (width * aspectRatio * (1.0 / charAspect));
@@ -28,7 +34,7 @@ public class AsciiConverter {
                 int rgb = resized.getRGB(x, y);
                 int gray = ImageProcessor.getGrayscale(rgb);
 
-                char c = mapToChar(gray);
+                char c = mapToChar(gray, contrast, brightness, invert);
                 ascii.append(c);
             }
             ascii.append("\n");
@@ -37,11 +43,28 @@ public class AsciiConverter {
         return ascii.toString();
     }
 
-    private char mapToChar(int gray) {
+    private char mapToChar(
+            int gray,
+            double contrast,
+            double brightness,
+            boolean invert
+    ) {
+
         double normalized = gray / 255.0;
 
-        // contrast tweak
-        normalized = Math.pow(normalized, 0.8);
+        // 🎯 Contrast control
+        normalized = Math.pow(normalized, contrast);
+
+        // 🎯 Brightness adjustment
+        normalized += brightness;
+
+        // 🎯 Invert toggle
+        if (invert) {
+            normalized = 1.0 - normalized;
+        }
+
+        // 🎯 Clamp values (VERY important)
+        normalized = Math.max(0, Math.min(1, normalized));
 
         int index = (int) (normalized * (CharacterMap.DEFAULT.length() - 1));
         return CharacterMap.DEFAULT.charAt(index);

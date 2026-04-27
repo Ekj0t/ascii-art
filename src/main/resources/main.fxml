@@ -2,28 +2,40 @@
 
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.*?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.asciiart.ui.MainController">
 
-    <!-- TOP BAR -->
-    <top>
-        <VBox spacing="10" alignment="CENTER">
+    <!-- LEFT PANEL (CONTROLS) -->
+    <left>
+        <VBox spacing="12" style="-fx-padding: 12; -fx-background-color: #2b2b2b;">
+
+            <Label text="Resolution" style="-fx-text-fill: white;"/>
+            <Slider fx:id="resolutionSlider" min="50" max="300" value="150"/>
+
+            <Label text="Contrast" style="-fx-text-fill: white;"/>
+            <Slider fx:id="contrastSlider" min="0.5" max="2.0" value="0.8"/>
+
+            <Label text="Brightness" style="-fx-text-fill: white;"/>
+            <Slider fx:id="brightnessSlider" min="-0.5" max="0.5" value="0"/>
+
+
+            <CheckBox fx:id="invertCheckbox" text="Invert" style="-fx-text-fill: white;"/>
+
+            <Separator/>
+
             <Button text="Upload Image" onAction="#handleUpload"/>
             <Button text="Save ASCII Image" onAction="#handleSave"/>
-            <Label text="Drag &amp; Drop image anywhere below"/>
-        </VBox>
-    </top>
 
-    <!-- CENTER PREVIEW -->
+        </VBox>
+    </left>
+
+    <!-- CENTER (ASCII PREVIEW) -->
     <center>
         <TextArea fx:id="outputArea"
                   wrapText="false"
-                  style="-fx-font-family: 'Consolas'; -fx-font-size: 8;"
-        />
+                  style="-fx-font-family: 'Consolas'; -fx-font-size: 8;"/>
     </center>
 
 </BorderPane>

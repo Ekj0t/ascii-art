@@ -1,5 +1,9 @@
 package com.asciiart.ui;
 
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
+import javafx.scene.control.Slider;
+import javafx.scene.control.CheckBox;
 import com.asciiart.core.AsciiConverter;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -18,12 +22,52 @@ public class MainController {
 
     private final AsciiConverter converter = new AsciiConverter();
 
+    @FXML private Slider resolutionSlider;
+    @FXML private Slider contrastSlider;
+    @FXML private Slider brightnessSlider;
+    @FXML private CheckBox invertCheckbox;
+
+    private PauseTransition delay = new PauseTransition(Duration.millis(200));
+
     private File currentFile;
     private BufferedImage currentImage;
 
     @FXML
     private void initialize() {
         setupDragAndDrop();
+        setupLivePreview();
+    }
+
+    private void setupLivePreview() {
+
+        resolutionSlider.valueProperty().addListener((obs, o, n) -> triggerUpdate());
+        contrastSlider.valueProperty().addListener((obs, o, n) -> triggerUpdate());
+        brightnessSlider.valueProperty().addListener((obs, o, n) -> triggerUpdate());
+        invertCheckbox.selectedProperty().addListener((obs, o, n) -> triggerUpdate());
+    }
+
+    private void triggerUpdate() {
+        delay.setOnFinished(e -> updateAscii());
+        delay.playFromStart();
+    }
+
+    private void updateAscii() {
+        if (currentImage == null) return;
+
+        int width = (int) resolutionSlider.getValue();
+        double contrast = contrastSlider.getValue();
+        double brightness = brightnessSlider.getValue();
+        boolean invert = invertCheckbox.isSelected();
+
+        String ascii = converter.convertToAscii(
+                currentImage,
+                width,
+                contrast,
+                brightness,
+                invert
+        );
+
+        outputArea.setText(ascii);
     }
 
     @FXML
@@ -65,8 +109,7 @@ public class MainController {
             currentFile = file;
             currentImage = ImageIO.read(file);
 
-            String ascii = converter.convertToAscii(currentImage, 150);
-            outputArea.setText(ascii);
+            updateAscii();
 
         } catch (Exception e) {
             e.printStackTrace();
