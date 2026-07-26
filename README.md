@@ -81,21 +81,6 @@ Alternatively, open the project in IntelliJ IDEA or your preferred Java IDE and 
 
 ---
 
-## Project Structure
-
-```text
-ascii-art/
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   └── resources/
-├── pom.xml
-├── .gitignore
-└── README.md
-```
-
----
-
 ## Roadmap
 
 Planned improvements include:
