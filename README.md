@@ -19,6 +19,12 @@ A lightweight Java application that transforms images into beautiful ASCII art u
 
 ---
 
+## Demo
+
+![App Demo](demo.png)
+
+---
+
 ## Why ASCII Art?
 
 ASCII art is a fun and creative way to represent images using text characters. It has applications in:
